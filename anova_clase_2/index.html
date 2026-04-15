@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ANOVA de dos factores | Productividad en fabrica</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <p class="kicker">Sitio educativo interactivo</p>
+    <h1>ANOVA de dos factores: Operador y Jornada</h1>
+    <p>
+      Este sitio analiza la productividad (sillones terminados) considerando dos factores:
+      <strong>operador</strong> y <strong>jornada</strong>. Incluye teoria, desarrollo paso a paso,
+      herramientas interactivas, codigo Python y conclusiones.
+    </p>
+    <nav>
+      <a href="#herramientas">Herramientas</a>
+      <a href="#teoria">Teoria</a>
+      <a href="#desarrollo">Desarrollo</a>
+      <a href="#python">Python</a>
+      <a href="#analisis">Analisis</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="herramientas">
+      <h2>Herramientas interactivas</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>1) Calculadora ANOVA de dos factores (resumen)</h3>
+          <p>
+            Ingresa SC y dimensiones del experimento para obtener GL, CM, F, F critico, valor p
+            y decision para operadores y jornadas.
+          </p>
+
+          <form id="summary-form" class="form-grid">
+            <label for="cInput">Numero de operadores (c)</label>
+            <input id="cInput" type="number" min="2" step="1" value="5" required>
+
+            <label for="rInput">Numero de jornadas (r)</label>
+            <input id="rInput" type="number" min="2" step="1" value="4" required>
+
+            <label for="ssOperatorInput">SC Operadores (SCO)</label>
+            <input id="ssOperatorInput" type="number" min="0.0001" step="0.01" value="205.80" required>
+
+            <label for="ssDayInput">SC Jornadas (SCJ)</label>
+            <input id="ssDayInput" type="number" min="0.0001" step="0.01" value="116.20" required>
+
+            <label for="ssErrorInput">SC Error (SCE)</label>
+            <input id="ssErrorInput" type="number" min="0.0001" step="0.01" value="95.80" required>
+
+            <label for="alphaInput">Nivel de significancia (a)</label>
+            <input id="alphaInput" type="number" min="0.001" max="0.2" step="0.001" value="0.05" required>
+
+            <button type="submit">Calcular ANOVA</button>
+          </form>
+
+          <div id="summary-output" class="output"></div>
+        </article>
+
+        <article class="card">
+          <h3>2) Explorador de productividad por matriz</h3>
+          <p>
+            Modifica la tabla de produccion para ver como cambian las medias por operador y jornada.
+            La app recalcula medias y detecta el operador/jornada con mayor rendimiento.
+          </p>
+
+          <div id="matrix-editor" class="matrix-editor"></div>
+          <div class="button-row">
+            <button id="recalculate-matrix" type="button">Recalcular desde la matriz</button>
+            <button id="reset-matrix" type="button" class="secondary">Restablecer datos originales</button>
+          </div>
+
+          <div id="matrix-output" class="output"></div>
+          <div class="grid chart-grid">
+            <div class="chart-panel">
+              <h4>Media por operador</h4>
+              <div id="operator-chart"></div>
+            </div>
+            <div class="chart-panel">
+              <h4>Media por jornada</h4>
+              <div id="day-chart"></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="teoria">
+      <h2>Teoria estadistica: ANOVA de dos factores</h2>
+      <p>
+        El ANOVA de dos factores permite evaluar simultaneamente si dos variables independientes
+        explican cambios en una variable respuesta cuantitativa. En este caso:
+        <strong>Factor A = operador</strong> y <strong>Factor B = jornada</strong>.
+      </p>
+      <ul>
+        <li><strong>Diseno de bloques al azar:</strong> una observacion por celda (sin replicacion).</li>
+        <li>
+          <strong>Modelo:</strong>
+          <code>Y<sub>ij</sub> = mu + alpha<sub>i</sub> + beta<sub>j</sub> + epsilon<sub>ij</sub></code>.
+        </li>
+        <li><strong>Supuestos:</strong> independencia, normalidad y homogeneidad de varianzas.</li>
+      </ul>
+    </section>
+
+    <section id="desarrollo">
+      <h2>Desarrollo del problema</h2>
+      <h3>Enunciado</h3>
+      <p>
+        Una fabrica de muebles evalua la productividad (sillones terminados) considerando 5 operadores
+        (Jose, Carlos, Ximena, Karla y Manuel) y 4 jornadas (1, 2, 3 y 4).
+      </p>
+
+      <h3>Datos observados (sillones terminados)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Jornada / Operador</th>
+              <th>Jose</th>
+              <th>Carlos</th>
+              <th>Ximena</th>
+              <th>Karla</th>
+              <th>Manuel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>15</td><td>9</td><td>20</td><td>11</td><td>18</td></tr>
+            <tr><td>2</td><td>12</td><td>14</td><td>25</td><td>19</td><td>22</td></tr>
+            <tr><td>3</td><td>18</td><td>17</td><td>19</td><td>14</td><td>12</td></tr>
+            <tr><td>4</td><td>10</td><td>10</td><td>18</td><td>10</td><td>15</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Hipotesis</h3>
+      <p><strong>Operadores (Factor A):</strong></p>
+      <ul>
+        <li><strong>H0:</strong> las medias de productividad de todos los operadores son iguales.</li>
+        <li><strong>H1:</strong> al menos un operador tiene media distinta.</li>
+      </ul>
+      <p><strong>Jornadas (Bloques):</strong></p>
+      <ul>
+        <li><strong>H0:</strong> las medias de productividad de las 4 jornadas son iguales.</li>
+        <li><strong>H1:</strong> al menos una jornada presenta media distinta.</li>
+      </ul>
+
+      <h3>Tabla ANOVA reportada</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fuente de variacion</th>
+              <th>GL</th>
+              <th>SC</th>
+              <th>CM</th>
+              <th>F calculada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Operadores</td>
+              <td>4</td>
+              <td>205.80</td>
+              <td>51.45</td>
+              <td>6.45</td>
+            </tr>
+            <tr>
+              <td>Jornadas</td>
+              <td>3</td>
+              <td>116.20</td>
+              <td>38.73</td>
+              <td>4.85</td>
+            </tr>
+            <tr>
+              <td>Error</td>
+              <td>12</td>
+              <td>95.80</td>
+              <td>7.98</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td>19</td>
+              <td>417.80</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Calculos clave</h3>
+      <ol>
+        <li>GL operadores = c - 1 = 5 - 1 = 4.</li>
+        <li>GL jornadas = r - 1 = 4 - 1 = 3.</li>
+        <li>GL error = (c - 1)(r - 1) = 4 x 3 = 12.</li>
+        <li>CM operadores = 205.80 / 4 = 51.45.</li>
+        <li>CM jornadas = 116.20 / 3 = 38.73.</li>
+        <li>CM error = 95.80 / 12 = 7.98.</li>
+        <li>F operadores = 51.45 / 7.98 = 6.45.</li>
+        <li>F jornadas = 38.73 / 7.98 = 4.85.</li>
+      </ol>
+    </section>
+
+    <section id="python">
+      <h2>Codigo Python para resolver el ejercicio</h2>
+      <p>
+        Puedes descargar el script <code>anova2_solver.py</code>, que resuelve ANOVA de dos factores
+        (sin replicacion) desde la matriz de datos o desde SC resumidas.
+      </p>
+      <p><a href="anova2_solver.py" download>Descargar anova2_solver.py</a></p>
+
+      <pre><code id="python-code">from anova2_solver import REPORTED_SUMMARY, solve_from_summary
+
+result = solve_from_summary(REPORTED_SUMMARY)
+
+print("F operadores:", round(result["f_operators"], 4))
+print("F jornadas:", round(result["f_days"], 4))
+print("p operadores:", result["p_operators"])
+print("p jornadas:", result["p_days"])
+print("Rechazar H0 operadores:", result["reject_operators"])
+print("Rechazar H0 jornadas:", result["reject_days"])</code></pre>
+      <button id="copy-python" type="button" class="secondary">Copiar snippet</button>
+    </section>
+
+    <section id="analisis">
+      <h2>Interpretacion y conclusion</h2>
+      <ul>
+        <li><strong>Operadores:</strong> F<sub>c</sub> = 6.45 &gt; F<sub>t</sub>(4,12) ~ 3.26.</li>
+        <li><strong>Jornadas:</strong> F<sub>c</sub> = 4.85 &gt; F<sub>t</sub>(3,12) ~ 3.49.</li>
+      </ul>
+      <p>
+        Con alpha = 0.05, se rechaza H0 para ambos factores: existe evidencia de diferencias
+        significativas entre operadores y tambien entre jornadas.
+      </p>
+      <p>
+        A partir de las medias observadas, <strong>Ximena</strong> destaca como la operadora con mayor
+        productividad media y la <strong>Jornada 2</strong> presenta el mejor rendimiento promedio.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Sitio local listo para GitHub Pages. Vista local:
+      <code>python3 -m http.server 8000</code> y abre
+      <code>http://localhost:8000/anova-dos-factores-site/</code>.
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
