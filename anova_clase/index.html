@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ANOVA de un factor | Métodos de ensamblado</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <p class="kicker">Sitio educativo interactivo</p>
+    <h1>ANOVA de un factor aplicado a tiempos de ensamblado</h1>
+    <p>
+      Este sitio resume el problema con los métodos <strong>Alfa, Beta, Gamma y Sigma</strong>, muestra
+      el desarrollo matemático, incluye herramientas interactivas y proporciona código Python para
+      reproducir la decisión estadística.
+    </p>
+    <nav>
+      <a href="#herramientas">Herramientas</a>
+      <a href="#teoria">Teoría</a>
+      <a href="#desarrollo">Desarrollo</a>
+      <a href="#python">Python</a>
+      <a href="#analisis">Análisis</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="herramientas">
+      <h2>Herramientas interactivas</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>1) Calculadora ANOVA (tabla resumen)</h3>
+          <p>
+            Ajusta los datos del problema y obtén automáticamente grados de libertad, cuadrados medios,
+            F calculado, F crítico, valor p y decisión.
+          </p>
+
+          <form id="anova-form" class="form-grid">
+            <label for="kInput">Número de métodos (k)</label>
+            <input id="kInput" type="number" min="2" step="1" value="4" required>
+
+            <label for="nInput">Total de observaciones (N)</label>
+            <input id="nInput" type="number" min="3" step="1" value="20" required>
+
+            <label for="ssBetweenInput">SC Entre Grupos</label>
+            <input id="ssBetweenInput" type="number" min="0.0001" step="0.01" value="296.55" required>
+
+            <label for="ssWithinInput">SC Dentro de Grupos</label>
+            <input id="ssWithinInput" type="number" min="0.0001" step="0.01" value="116.40" required>
+
+            <label for="alphaInput">Nivel de significancia (α)</label>
+            <input id="alphaInput" type="number" min="0.001" max="0.2" step="0.001" value="0.05" required>
+
+            <button type="submit">Calcular</button>
+          </form>
+
+          <div id="anova-output" class="output"></div>
+        </article>
+
+        <article class="card">
+          <h3>2) Explorador de medias por método</h3>
+          <p>
+            Mueve los deslizadores para simular cambios en los promedios y observar cómo cambia
+            el método más rápido.
+          </p>
+
+          <div class="slider-grid">
+            <label for="mean-alfa">Alfa: <span id="mean-alfa-value">60.4</span> min</label>
+            <input id="mean-alfa" class="mean-slider" type="range" min="40" max="80" step="0.1" value="60.4">
+
+            <label for="mean-beta">Beta: <span id="mean-beta-value">55.6</span> min</label>
+            <input id="mean-beta" class="mean-slider" type="range" min="40" max="80" step="0.1" value="55.6">
+
+            <label for="mean-gamma">Gamma: <span id="mean-gamma-value">65.2</span> min</label>
+            <input id="mean-gamma" class="mean-slider" type="range" min="40" max="80" step="0.1" value="65.2">
+
+            <label for="mean-sigma">Sigma: <span id="mean-sigma-value">64.6</span> min</label>
+            <input id="mean-sigma" class="mean-slider" type="range" min="40" max="80" step="0.1" value="64.6">
+          </div>
+
+          <div id="mean-chart" class="chart"></div>
+          <p id="best-method" class="best-method"></p>
+          <button id="reset-means" type="button" class="secondary">Restablecer valores originales</button>
+        </article>
+      </div>
+    </section>
+
+    <section id="teoria">
+      <h2>Teoría estadística (ANOVA de un factor)</h2>
+      <p>
+        El ANOVA de un factor determina si existen diferencias significativas entre las medias de tres o más
+        poblaciones. En este caso, el factor es el <strong>método de ensamblado</strong> y la variable respuesta
+        es el <strong>tiempo promedio (minutos)</strong>.
+      </p>
+      <h3>Conceptos clave</h3>
+      <ul>
+        <li><strong>Factor:</strong> variable independiente controlada por el investigador.</li>
+        <li><strong>Niveles o tratamientos:</strong> Alfa, Beta, Gamma y Sigma.</li>
+        <li><strong>Error experimental:</strong> variabilidad que no se explica por el método aplicado.</li>
+      </ul>
+      <h3>Supuestos del modelo</h3>
+      <ul>
+        <li>Normalidad de las poblaciones.</li>
+        <li>Igualdad de varianzas (homocedasticidad).</li>
+        <li>Independencia entre observaciones.</li>
+      </ul>
+      <p>
+        Modelo aditivo: <code>Y<sub>ij</sub> = μ + τ<sub>i</sub> + ε<sub>ij</sub></code>.
+      </p>
+    </section>
+
+    <section id="desarrollo">
+      <h2>Desarrollo del problema</h2>
+      <h3>Enunciado y datos</h3>
+      <p>
+        Se evaluaron 4 métodos (k = 4), con 5 repeticiones por método (N = 20). Medias muestrales:
+      </p>
+      <ul>
+        <li><strong>Alfa:</strong> 60.4 min</li>
+        <li><strong>Beta:</strong> 55.6 min</li>
+        <li><strong>Gamma:</strong> 65.2 min</li>
+        <li><strong>Sigma:</strong> 64.6 min</li>
+      </ul>
+      <p>
+        Pregunta: ¿existen diferencias significativas entre los tiempos promedio al 5%?
+      </p>
+      <p>
+        <strong>Hipótesis nula (H₀):</strong> μ₁ = μ₂ = μ₃ = μ₄<br>
+        <strong>Hipótesis alternativa (H₁):</strong> al menos una media es distinta.
+      </p>
+
+      <h3>Tabla ANOVA</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fuente de variación</th>
+              <th>Grados de libertad</th>
+              <th>Suma de cuadrados (SC)</th>
+              <th>Cuadrado medio (CM)</th>
+              <th>Estadístico F</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Entre grupos (tratamientos)</td>
+              <td>k - 1 = 3</td>
+              <td>296.55</td>
+              <td>98.85</td>
+              <td>13.587</td>
+            </tr>
+            <tr>
+              <td>Dentro de grupos (error)</td>
+              <td>N - k = 16</td>
+              <td>116.40</td>
+              <td>7.275</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td>N - 1 = 19</td>
+              <td>412.95</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Cálculo paso a paso</h3>
+      <ol>
+        <li><strong>Grados de libertad:</strong> GL<sub>entre</sub> = 4 - 1 = 3 y GL<sub>dentro</sub> = 20 - 4 = 16.</li>
+        <li><strong>Cuadrados medios:</strong> CM<sub>entre</sub> = 296.55 / 3 = 98.85 y CM<sub>dentro</sub> = 116.40 / 16 = 7.275.</li>
+        <li><strong>Estadístico:</strong> F<sub>c</sub> = 98.85 / 7.275 = 13.587.</li>
+      </ol>
+    </section>
+
+    <section id="python">
+      <h2>Código Python para resolver el problema</h2>
+      <p>
+        El sitio incluye el archivo <code>anova_solver.py</code> (descargable) para resolver este ANOVA a partir
+        de la tabla resumen, sin dependencias externas.
+      </p>
+      <p>
+        <a href="anova_solver.py" download>Descargar anova_solver.py</a>
+      </p>
+      <pre><code id="python-code">from anova_solver import AnovaInput, solve_anova
+
+means = {"Alfa": 60.4, "Beta": 55.6, "Gamma": 65.2, "Sigma": 64.6}
+result = solve_anova(
+    AnovaInput(k=4, n_total=20, ss_between=296.55, ss_within=116.40, alpha=0.05)
+)
+
+print(result)
+print("Metodo mas rapido:", min(means, key=means.get))</code></pre>
+      <button id="copy-python" type="button" class="secondary">Copiar snippet</button>
+    </section>
+
+    <section id="analisis">
+      <h2>Análisis e interpretación</h2>
+      <ul>
+        <li><strong>F calculado:</strong> 13.587</li>
+        <li><strong>F crítico (α = 0.05, GL 3 y 16):</strong> ≈ 3.24</li>
+        <li><strong>Valor p:</strong> ≈ 0.000115</li>
+      </ul>
+      <p>
+        Como <strong>F<sub>c</sub> &gt; F<sub>t</sub></strong> y <strong>p &lt; 0.05</strong>, se rechaza H₀.
+        Existe evidencia estadística para afirmar que los tiempos promedio no son iguales.
+      </p>
+      <p>
+        En estos datos, <strong>Beta</strong> presenta el menor tiempo promedio (55.6 min), por lo que aparece
+        como el método más eficiente.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Sitio local listo para GitHub Pages. Para verlo en local:
+      <code>python3 -m http.server 8000</code> y abre <code>http://localhost:8000/anova-site/</code>.
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
