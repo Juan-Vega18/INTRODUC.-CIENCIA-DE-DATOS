@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Regresion lineal simple y multiple - Sintesis y aplicacion estudiantil</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card: #111827;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --accent: #38bdf8;
+        --border: #1f2937;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+      header {
+        padding: 36px 20px 20px;
+        text-align: center;
+      }
+      header h1 {
+        margin: 0 0 8px;
+        font-size: 1.8rem;
+      }
+      header p {
+        margin: 0;
+        color: var(--muted);
+      }
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 12px 20px 60px;
+        display: grid;
+        gap: 18px;
+      }
+      section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px;
+      }
+      section h2 {
+        margin-top: 0;
+        color: var(--accent);
+        font-size: 1.25rem;
+      }
+      .meta {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      figure {
+        margin: 16px 0 8px;
+        text-align: center;
+      }
+      figure img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: #0b1220;
+      }
+      figcaption {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+      }
+      th, td {
+        border: 1px solid var(--border);
+        padding: 8px 10px;
+        text-align: left;
+      }
+      th {
+        background: #0b1220;
+      }
+      ul, ol {
+        padding-left: 18px;
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #0b1220;
+        color: var(--muted);
+        font-size: 0.8rem;
+        border: 1px solid var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Regresion lineal simple y multiple: aplicacion en la prediccion de variables naturales relacionadas con el crecimiento microalgal</h1>
+      <p>Resumen del articulo y aplicacion estudiantil con regresion lineal (archivo volumen_costos.xlsx).</p>
+      <p class="meta">Carrasquilla-Batista, Chacon-Rodriguez, Nunez-Montero, Gomez-Espinoza, Valverde, Guerrero-Barrantes (2016)</p>
+    </header>
+
+    <main>
+      <section id="resumen">
+        <h2>Resumen</h2>
+        <p>
+          El articulo plantea la necesidad de integrar datos de multiples sensores en agricultura de precision y
+          en investigacion, especialmente cuando los dispositivos se encuentran en sitios remotos. Propone
+          aprovechar el Internet de las Cosas para centralizar el almacenamiento y el procesamiento en la nube.
+          En ese marco, el trabajo introduce la regresion lineal simple y multiple como base teorica para modelar
+          relaciones entre variables ambientales (temperatura, luz, pH y oxigeno disuelto) y el crecimiento de
+          microalgas.
+        </p>
+      </section>
+
+      <section id="introduccion">
+        <h2>Introduccion</h2>
+        <p>
+          El texto explica que la recoleccion tradicional de datos ambientales depende de equipos separados por
+          variable, lo cual complica la integracion y el analisis conjunto. La adopcion del Internet de las Cosas
+          permite conectar sensores y centralizar el procesamiento, habilitando analisis predictivos en tiempo
+          oportuno. Como contexto biologico, se describe la microalga Chlorella sp., su potencial en biotecnologia
+          y los factores que influyen en su crecimiento, que luego se usan para ejemplificar modelos de regresion.
+        </p>
+      </section>
+
+      <section id="metodologia">
+        <h2>Metodologia</h2>
+        <p>
+          El articulo desarrolla la base teorica de la regresion lineal simple y multiple: definicion de variables
+          dependientes e independientes, interpretacion de la pendiente e intercepto, residuos, metodo de minimos
+          cuadrados, supuestos del modelo y pruebas de hipotesis, asi como el uso de R2 para evaluar el ajuste.
+          Se presenta un ejemplo conceptual (Figura 2, pagina 5) que ilustra la relacion entre costos y volumen.
+        </p>
+        <p>
+          <span class="badge">Trabajo del estudiante</span>
+          A partir de la Figura 2 del articulo, se estimaron puntos del grafico (con apoyo de Claude) y se aplico
+          una regresion lineal en Excel con el archivo <strong>volumen_costos.xlsx</strong>. Este ejercicio busca
+          explicar con datos la idea central de la regresion simple descrita en el texto, como un trabajo
+          preliminar de validacion.
+        </p>
+      </section>
+
+      <section id="resultados-discusion">
+        <h2>Resultados y discusion</h2>
+        <p>
+          Con los puntos estimados de la Figura 2 se obtuvo el modelo: <strong>y = -17.58 + 1.33x</strong>,
+          con <strong>R2 = 0.891</strong> (n = 58). La pendiente positiva indica que, en el ejemplo de costos vs
+          volumen, los costos aumentan conforme se incrementa el volumen. El alto R2 sugiere un buen ajuste,
+          coherente con el objetivo del articulo de mostrar la utilidad de la regresion simple como aproximacion
+          inicial. Dado que el articulo es principalmente teorico, este resultado se interpreta como una
+          demostracion preliminar de la relacion lineal, no como una validacion experimental completa.
+        </p>
+
+        <figure>
+          <img src="assets/regresion_volumen_costos.png" alt="Regresion lineal entre costos y volumen" />
+          <figcaption>Figura A. Regresion lineal aplicada a los puntos estimados de la Figura 2 del articulo.</figcaption>
+        </figure>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Metrica</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Intercepto (a)</td>
+              <td>-17.58</td>
+            </tr>
+            <tr>
+              <td>Pendiente (b)</td>
+              <td>1.33</td>
+            </tr>
+            <tr>
+              <td>R2</td>
+              <td>0.891</td>
+            </tr>
+            <tr>
+              <td>Rango de X (volumen)</td>
+              <td>26 a 56</td>
+            </tr>
+            <tr>
+              <td>Rango de Y (costos)</td>
+              <td>14 a 60</td>
+            </tr>
+            <tr>
+              <td>Numero de puntos</td>
+              <td>58</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="conclusiones">
+        <h2>Conclusiones</h2>
+        <p>
+          La regresion lineal simple y multiple es adecuada para modelar variables cuantitativas relacionadas con
+          el crecimiento microalgal, destacando el papel de temperatura, pH, luz y oxigeno disuelto. El articulo
+          recomienda iniciar con regresion simple por variable y luego avanzar a regresion multiple. El enfoque
+          IoT facilita la captura y manejo de datos para futuros analisis predictivos. El ejercicio estudiantil con
+          la Figura 2 refuerza el caracter preliminar del trabajo y muestra como la regresion simple puede
+          explicar relaciones lineales de forma practica.
+        </p>
+      </section>
+
+      <section id="referencias">
+        <h2>Referencias</h2>
+        <ol>
+          <li>Borowitzka, M.A. (1999). Commercial production of microalgae: ponds, tanks, tubes and fermenters. Journal of Biotechnology, 70, 313-321.</li>
+          <li>Evans, D. (2011). Internet of Things - How the Next Evolution of the Internet Is Changing Everything. White paper Cisco Internet Business Solutions Group (IBSG).</li>
+          <li>Fox, R. (1996). Spirulina production and potential. France: Edisud. ISBN 2-84744-883-X.</li>
+          <li>Gutierrez, H., De la Vara, R. (2012). Analisis y diseno de experimentos, 3ra edicion. McGraw-Hill, Mexico.</li>
+          <li>Henrikson, R. (1994). Microalga Spirulina: Superalimento del futuro. Barcelona: Ediciones S.A. Urano. ISBN 84-7953-047-2.</li>
+          <li>Montgomery, D. (2008). Diseno y analisis de experimentos, 2da edicion. Limusa-Wiley, Mexico.</li>
+          <li>Rosenberg, J., Oyler, G., Wilkinson, J., Betenbaugh, M. (2008). A green light for engineered algae: Redirecting metabolism to fuel a biotechnology revolution. Current Opinion in Biotechnology, 19, 430-436.</li>
+          <li>Sakai, N., Sakamoto, Y., Kishimoto, N., Chihara, M., Karube, I. (1995). Chlorella strains from hot springs tolerant to high temperature and high CO2. Energy Conversion and Management, 16, 693-696.</li>
+          <li>Stewart, C., Hessami, M.A. (2005). A study of methods of carbon dioxide capture and sequestration - the sustainability of a photosynthetic bioreactor approach. Energy Conversion and Management, 46, 403-420.</li>
+          <li>Sung, K., Lee, J., Park, S., Choi, M. (1999). CO2 fixation by Chlorella sp KR-1 and its cultural characteristics. Bioresource Technology, 68, 269-73.</li>
+          <li>Sydney, E., Sturm, W., de Carvalho, J., Thomaz-Soccol, V., Larroche, C. (2010). Potential carbon dioxide fixation by industrially important microalgae. Published by Elsevier Ltd. doi:10.1016/j.biortech.2010.02.088.</li>
+          <li>Vonshak, A. (1997). Spirulina platensis (Arthrospira): Physiology, Cell Biology and Biotechnology. Taylor & Francis, London. ISBN 0-7484-0674-3.</li>
+          <li>Wang, B., Li, Y., Wu, N., Lan, C.Q. (2008). CO2 mitigation using microalgae. Applications in Microbiology. Biotechnology, 79, 707-718.</li>
+          <li>Yick, J., Mukherjee, B., Ghosal, D. (2008). Wireless sensor network survey. Department of Computer Science, University of California, Davis, USA. Science Direct. doi:10.1016/j.com-net.2008.04.002.</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>
