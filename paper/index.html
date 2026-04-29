@@ -148,12 +148,49 @@
           Se presenta un ejemplo conceptual (Figura 2, pagina 5) que ilustra la relacion entre costos y volumen.
         </p>
         <p>
+          La regresion lineal simple se expresa como <strong>Y = beta_0 + beta_1 X + e</strong>, donde beta_0 es el
+          intercepto, beta_1 la pendiente y e el termino de error. Para cada punto, el valor estimado es
+          <strong>y_hat = beta_0 + beta_1 x</strong> y el residuo es <strong>e = y - y_hat</strong>. El metodo de minimos
+          cuadrados minimiza <strong>SSE = sum(y_i - y_hat_i)^2</strong>. Las soluciones cerradas son
+          <strong>beta_1 = sum((x_i - x_bar)(y_i - y_bar)) / sum((x_i - x_bar)^2)</strong> y
+          <strong>beta_0 = y_bar - beta_1 x_bar</strong>. El ajuste se resume con <strong>R2 = 1 - SSE / SST</strong>, donde
+          <strong>SST = sum(y_i - y_bar)^2</strong>. En regresion multiple, el modelo general es
+          <strong>Y = beta_0 + beta_1 X1 + ... + beta_p Xp + e</strong> y los parametros se obtienen con las ecuaciones
+          normales <strong>(X^T X) beta = X^T y</strong>.
+        </p>
+        <p>
           <span class="badge">Trabajo del estudiante</span>
           A partir de la Figura 2 del articulo, se estimaron puntos del grafico (con apoyo de Claude) y se aplico
           una regresion lineal en Excel con el archivo <strong>volumen_costos.xlsx</strong>. Este ejercicio busca
           explicar con datos la idea central de la regresion simple descrita en el texto, como un trabajo
           preliminar de validacion.
         </p>
+        <p>
+          Para calcular la imagen <strong>imagen2.jpeg</strong>, se subieron los datos a Python y se uso <strong>sympy</strong>
+          para expresar la ecuacion simbolica, junto con <strong>sklearn</strong> para el ajuste. El codigo utilizado fue:
+        </p>
+        <pre><code>df = pd.read_csv("https://raw.githubusercontent.com/Juan-Vega18/INTRODUC.-CIENCIA-DE-DATOS/refs/heads/main/data.csv", sep=";", decimal=",")
+X = df[['Volumen (X)']]
+Y = df[['Costos (Y)']]
+reg = LinearRegression().fit(X, Y)
+m = reg.coef_[0]
+b = reg.intercept_
+
+x = sp.Symbol('x')
+y_expr = m*x + b
+
+print("Ecuación de regresión:")
+sp.pprint(y_expr)
+# línea de regresión
+x_vals = np.linspace(X.min(), X.max(), 100)
+y_vals = m * x_vals + b
+plt.plot(x_vals, y_vals, color='red', label="Regresión lineal")
+plt.scatter(X, Y, label='Datos originales')
+plt.xlabel("Volumen (X)")
+plt.ylabel("Costos (Y)")
+plt.legend()
+plt.title("Regresión lineal con SymPy + sklearn")
+plt.show()</code></pre>
       </section>
 
       <section id="resultados-discusion">
@@ -182,6 +219,10 @@
           <figure>
             <img src="assets/regresion_volumen_costos.png" alt="Regresion lineal entre costos y volumen" />
             <figcaption>Figura B. Regresion lineal aplicada a los puntos estimados de la Figura 2 del articulo.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/imagen2.jpeg" alt="Regresion lineal calculada con SymPy" />
+            <figcaption>Figura C. Regresion lineal calculada con SymPy y sklearn.</figcaption>
           </figure>
         </div>
 
